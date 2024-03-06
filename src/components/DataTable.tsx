@@ -64,15 +64,15 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
           <tr className="table-primary">
             <th>Name</th>
             <th>DOB</th>
+            <th>Email</th>
+            <th>Verified</th>
+            <th>Salary</th>
             <th>Address</th>
             <th>Telephone</th>
-            <th>Email</th>
             <th>Pets</th>
             <th>Score</th>
             <th>URL</th>
             <th className="desc">Description</th>
-            <th>Verified</th>
-            <th>Salary</th>
           </tr>
         </thead>
         <tbody>
@@ -80,17 +80,17 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
             <tr key={person._id}>
               <td data-label="Name">{person.name}</td>
               <td data-label="DOB">{person.dob}</td>
+              <td data-label="Email">{person.email}</td>
+              <td data-label="Verified">{person.verified ? 'Yes' : 'No'}</td>
+              <td data-label="Salary">{person.salary.toLocaleString()}</td>
               <td data-label="Address">{`${person.address.street}, ${person.address.town}, ${person.address.postcode}`}</td>
               <td data-label="Telephone">{person.telephone}</td>
-              <td data-label="Email">{person.email}</td>
               <td data-label="Pets">{person.pets.join(', ')}</td>
               <td data-label="Score">{person.score}</td>
               <td data-label="URL">
                 <a href={person.url}>{person.url}</a>
               </td>
               <td data-label="Description">{person.description}</td>
-              <td data-label="Verified">{person.verified ? 'Yes' : 'No'}</td>
-              <td data-label="Salary">{person.salary.toLocaleString()}</td>
             </tr>
           ))}
         </tbody>
