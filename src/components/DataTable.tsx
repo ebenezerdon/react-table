@@ -20,7 +20,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
   useEffect(() => {
     if (jumpToRow) {
       const rowNumber = parseInt(jumpToRow, 10)
-      if (!isNaN(rowNumber) && rowNumber >= 1 && rowNumber <= 500) {
+      if (!isNaN(rowNumber) && rowNumber >= 1 && rowNumber <= data.ctRoot.length) {
         const pageNumber = Math.ceil(rowNumber / recordsPerPage) - 1
         setCurrentPage(pageNumber)
         setHighlightedRow(data.ctRoot[rowNumber - 1]._id)
@@ -44,20 +44,30 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
     setShowModal(true)
   }
 
+  const clearJumpToRow = () => {
+    setJumpToRow('')
+    setHighlightedRow(null)
+  }
+
   const startIndex = currentPage * recordsPerPage
   const endIndex = startIndex + recordsPerPage
   const currentRecords = data.ctRoot.slice(startIndex, endIndex)
 
   return (
     <main>
-      <div className="jump-to-row">
-        <input
-          type="number"
-          placeholder="Enter row number (1-500)"
-          value={jumpToRow}
-          onChange={(e) => setJumpToRow(e.target.value)}
-        />
-        <button onClick={() => setJumpToRow('')}>Clear</button>
+      <div className="jump-to-row my-3">
+        <div className="input-group">
+          <input
+            type="number"
+            className="form-control"
+            placeholder="Enter row number (1-500)"
+            value={jumpToRow}
+            onChange={(e) => setJumpToRow(e.target.value)}
+          />
+          <button className="btn btn-outline-secondary" type="button" onClick={clearJumpToRow}>
+            Clear
+          </button>
+        </div>
       </div>
       <div className="custom-style table-responsive">
         <table className="table table-striped table-bordered table-hover">
@@ -76,6 +86,9 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
               <tr
                 key={person._id}
                 onClick={() => handleRowClick(person)}
+                onKeyDown={(e) => e.key === 'Enter' && handleRowClick(person)}
+                role="button"
+                tabIndex={0}
                 className={person._id === highlightedRow ? 'highlighted' : ''}
               >
                 <td>{startIndex + index + 1}</td>
