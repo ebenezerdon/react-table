@@ -1,6 +1,12 @@
 .custom-style {
-  thead tr th {
-    padding: 1em 5em;
+  thead tr {
+    th {
+      padding: 1em 5em;
+    }
+
+    .index-col {
+      padding: 1em 1em;
+    }
   }
 
   .table-hover tbody tr:hover td {

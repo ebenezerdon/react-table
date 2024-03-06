@@ -63,6 +63,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
         <table className="table table-striped table-bordered table-hover">
           <thead>
             <tr className="table-primary">
+              <th className="index-col">#</th>
               <th>Name</th>
               <th>DOB</th>
               <th>Email</th>
@@ -71,12 +72,13 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
             </tr>
           </thead>
           <tbody>
-            {currentRecords.map((person) => (
+            {currentRecords.map((person, index) => (
               <tr
                 key={person._id}
                 onClick={() => handleRowClick(person)}
                 className={person._id === highlightedRow ? 'highlighted' : ''}
               >
+                <td>{startIndex + index + 1}</td>
                 <td>{person.name}</td>
                 <td>{person.dob}</td>
                 <td>{person.email}</td>
