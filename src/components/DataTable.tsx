@@ -14,31 +14,31 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
   const [currentPage, setCurrentPage] = useState(0)
   const [showModal, setShowModal] = useState(false)
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null)
-  const [targetRowNumber, setTargetRowNumber] = useState('')
+  const [targetRow, setTargetRow] = useState('')
   const [highlightedRow, setHighlightedRow] = useState<string | null>(null)
   const recordsPerPage = 10
 
   /* Jump to row page and highlight the row */
   useEffect(() => {
-    if (targetRowNumber) {
-      const rowNumber = parseInt(targetRowNumber, 10)
+    if (targetRow) {
+      const rowNumber = parseInt(targetRow, 10)
       if (!isNaN(rowNumber) && rowNumber >= 1 && rowNumber <= data.ctRoot.length) {
         const pageNumber = Math.ceil(rowNumber / recordsPerPage) - 1
         setCurrentPage(pageNumber)
         setHighlightedRow(data.ctRoot[rowNumber - 1]._id)
       }
     }
-  }, [targetRowNumber, data.ctRoot])
+  }, [targetRow, data.ctRoot])
 
   const handleRowClick = (person: Person) => {
     setSelectedPerson(person)
     setShowModal(true)
     setHighlightedRow(person._id)
-    setTargetRowNumber('')
+    setTargetRow('')
   }
 
   const clearTargetRowNumber = () => {
-    setTargetRowNumber('')
+    setTargetRow('')
     setHighlightedRow(null)
   }
 
@@ -55,8 +55,8 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
             type="number"
             className="form-control"
             placeholder={`Enter row number (1-${data.ctRoot.length})`}
-            value={targetRowNumber}
-            onChange={(e) => setTargetRowNumber(e.target.value)}
+            value={targetRow}
+            onChange={(e) => setTargetRow(e.target.value)}
           />
           <button className="btn btn-outline-secondary" type="button" onClick={clearTargetRowNumber}>
             Clear
