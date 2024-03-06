@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './DataTable.scss'
 
 type Person = {
@@ -8,7 +8,7 @@ type Person = {
   address: {
     street: string
     town: string
-    postode: string
+    postcode: string
   }
   telephone: string
   pets: string[]
@@ -27,8 +27,38 @@ type DataTableProps = {
 }
 
 const DataTable: React.FC<DataTableProps> = ({ data }) => {
+  const [currentPage, setCurrentPage] = useState(0)
+  const recordsPerPage = 10
+
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => (prev > 0 ? prev - 1 : 0))
+  }
+
+  const handleNextPage = () => {
+    const totalPages = Math.ceil(data.ctRoot.length / recordsPerPage)
+    setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : prev))
+  }
+
+  const startIndex = currentPage * recordsPerPage
+  const endIndex = startIndex + recordsPerPage
+  const currentRecords = data.ctRoot.slice(startIndex, endIndex)
+
   return (
     <div className="custom-style table-responsive">
+      <div className="d-flex align-items-center my-3">
+        <button className="btn btn-primary me-2" onClick={handlePrevPage} disabled={currentPage === 0}>
+          Previous
+        </button>
+        <span>{`Page ${currentPage + 1} of ${Math.ceil(data.ctRoot.length / recordsPerPage)}`}</span>
+        <button
+          className="btn btn-primary ms-2"
+          onClick={handleNextPage}
+          disabled={currentPage >= Math.ceil(data.ctRoot.length / recordsPerPage) - 1}
+        >
+          Next
+        </button>
+      </div>
+
       <table className="table table-striped table-bordered">
         <thead>
           <tr className="table-primary">
@@ -46,11 +76,11 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {data.ctRoot.map((person) => (
+          {currentRecords.map((person) => (
             <tr key={person._id}>
               <td data-label="Name">{person.name}</td>
               <td data-label="DOB">{person.dob}</td>
-              <td data-label="Address">{`${person.address.street}, ${person.address.town}, ${person.address.postode}`}</td>
+              <td data-label="Address">{`${person.address.street}, ${person.address.town}, ${person.address.postcode}`}</td>
               <td data-label="Telephone">{person.telephone}</td>
               <td data-label="Email">{person.email}</td>
               <td data-label="Pets">{person.pets.join(', ')}</td>
