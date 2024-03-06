@@ -14,31 +14,31 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
   const [currentPage, setCurrentPage] = useState(0)
   const [showModal, setShowModal] = useState(false)
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null)
-  const [jumpToRow, setJumpToRow] = useState('')
+  const [targetRowNumber, setTargetRowNumber] = useState('')
   const [highlightedRow, setHighlightedRow] = useState<string | null>(null)
   const recordsPerPage = 10
 
   /* Jump to row page and highlight the row */
   useEffect(() => {
-    if (jumpToRow) {
-      const rowNumber = parseInt(jumpToRow, 10)
+    if (targetRowNumber) {
+      const rowNumber = parseInt(targetRowNumber, 10)
       if (!isNaN(rowNumber) && rowNumber >= 1 && rowNumber <= data.ctRoot.length) {
         const pageNumber = Math.ceil(rowNumber / recordsPerPage) - 1
         setCurrentPage(pageNumber)
         setHighlightedRow(data.ctRoot[rowNumber - 1]._id)
       }
     }
-  }, [jumpToRow, data.ctRoot])
+  }, [targetRowNumber, data.ctRoot])
 
   const handleRowClick = (person: Person) => {
     setSelectedPerson(person)
     setShowModal(true)
     setHighlightedRow(person._id)
-    setJumpToRow('')
+    setTargetRowNumber('')
   }
 
-  const clearJumpToRow = () => {
-    setJumpToRow('')
+  const clearTargetRowNumber = () => {
+    setTargetRowNumber('')
     setHighlightedRow(null)
   }
 
@@ -55,10 +55,10 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
             type="number"
             className="form-control"
             placeholder={`Enter row number (1-${data.ctRoot.length})`}
-            value={jumpToRow}
-            onChange={(e) => setJumpToRow(e.target.value)}
+            value={targetRowNumber}
+            onChange={(e) => setTargetRowNumber(e.target.value)}
           />
-          <button className="btn btn-outline-secondary" type="button" onClick={clearJumpToRow}>
+          <button className="btn btn-outline-secondary" type="button" onClick={clearTargetRowNumber}>
             Clear
           </button>
         </div>
