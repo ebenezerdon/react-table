@@ -1,5 +1,7 @@
 # React/TypeScript DataTable
 
+View the live app [here](https://react-table-flax.vercel.app)
+
 A user-friendly data table built with React, TypeScript, and Vite, designed to display and manage a list of persons with features including:
 
 - Data pagination
