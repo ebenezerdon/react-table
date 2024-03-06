@@ -77,3 +77,4 @@ A user-friendly data table built with React, TypeScript, and Vite, designed to d
 - **Filtering/Searching:** Implement search functionality to filter the data table.
 - **Data Fetching:** Integrate with an API to fetch data dynamically.
 - **Robust Testing:** Add comprehensive unit and integration tests.
+- **Accessibility:** Ensure the app is fully accessible to all users.
