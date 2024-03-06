@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './DataTable.scss'
 import PersonDetailsModal from './PersonDetailsModal'
 import { Person } from '../data/types'
@@ -13,15 +13,30 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
   const [currentPage, setCurrentPage] = useState(0)
   const [showModal, setShowModal] = useState(false)
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null)
+  const [jumpToRow, setJumpToRow] = useState('')
+  const [highlightedRow, setHighlightedRow] = useState<string | null>(null)
   const recordsPerPage = 10
+
+  useEffect(() => {
+    if (jumpToRow) {
+      const rowNumber = parseInt(jumpToRow, 10)
+      if (!isNaN(rowNumber) && rowNumber >= 1 && rowNumber <= 500) {
+        const pageNumber = Math.ceil(rowNumber / recordsPerPage) - 1
+        setCurrentPage(pageNumber)
+        setHighlightedRow(data.ctRoot[rowNumber - 1]._id)
+      }
+    }
+  }, [jumpToRow, data.ctRoot])
 
   const handlePrevPage = () => {
     setCurrentPage((prev) => (prev > 0 ? prev - 1 : 0))
+    setHighlightedRow(null)
   }
 
   const handleNextPage = () => {
     const totalPages = Math.ceil(data.ctRoot.length / recordsPerPage)
     setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : prev))
+    setHighlightedRow(null)
   }
 
   const handleRowClick = (person: Person) => {
@@ -35,6 +50,15 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
 
   return (
     <main>
+      <div className="jump-to-row">
+        <input
+          type="number"
+          placeholder="Enter row number (1-500)"
+          value={jumpToRow}
+          onChange={(e) => setJumpToRow(e.target.value)}
+        />
+        <button onClick={() => setJumpToRow('')}>Clear</button>
+      </div>
       <div className="custom-style table-responsive">
         <table className="table table-striped table-bordered table-hover">
           <thead>
@@ -48,7 +72,11 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
           </thead>
           <tbody>
             {currentRecords.map((person) => (
-              <tr key={person._id} onClick={() => handleRowClick(person)} style={{ cursor: 'pointer' }}>
+              <tr
+                key={person._id}
+                onClick={() => handleRowClick(person)}
+                className={person._id === highlightedRow ? 'highlighted' : ''}
+              >
                 <td>{person.name}</td>
                 <td>{person.dob}</td>
                 <td>{person.email}</td>
@@ -59,7 +87,6 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
           </tbody>
         </table>
       </div>
-
       <div className="d-flex align-items-center my-4 justify-content-center">
         <button className="btn btn-primary me-2" onClick={handlePrevPage} disabled={currentPage === 0}>
           Previous
@@ -73,7 +100,6 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
           Next
         </button>
       </div>
-
       {showModal && selectedPerson && (
         <PersonDetailsModal person={selectedPerson} onClose={() => setShowModal(false)} />
       )}
