@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import './DataTable.scss'
+import Pagination from './Pagination'
 import PersonDetailsModal from './PersonDetailsModal'
+import './DataTable.scss'
 import { Person } from '../data/types'
 
 type DataTableProps = {
@@ -17,6 +18,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
   const [highlightedRow, setHighlightedRow] = useState<string | null>(null)
   const recordsPerPage = 10
 
+  /* Jump to row page and highlight the row */
   useEffect(() => {
     if (jumpToRow) {
       const rowNumber = parseInt(jumpToRow, 10)
@@ -27,17 +29,6 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
       }
     }
   }, [jumpToRow, data.ctRoot])
-
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => (prev > 0 ? prev - 1 : 0))
-    setHighlightedRow(null)
-  }
-
-  const handleNextPage = () => {
-    const totalPages = Math.ceil(data.ctRoot.length / recordsPerPage)
-    setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : prev))
-    setHighlightedRow(null)
-  }
 
   const handleRowClick = (person: Person) => {
     setSelectedPerson(person)
@@ -52,6 +43,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
   const startIndex = currentPage * recordsPerPage
   const endIndex = startIndex + recordsPerPage
   const currentRecords = data.ctRoot.slice(startIndex, endIndex)
+  const totalPages = Math.ceil(data.ctRoot.length / recordsPerPage)
 
   return (
     <main>
@@ -60,7 +52,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
           <input
             type="number"
             className="form-control"
-            placeholder="Enter row number (1-500)"
+            placeholder={`Enter row number (1-${data.ctRoot.length})`}
             value={jumpToRow}
             onChange={(e) => setJumpToRow(e.target.value)}
           />
@@ -102,19 +94,9 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
           </tbody>
         </table>
       </div>
-      <div className="d-flex align-items-center my-4 justify-content-center">
-        <button className="btn btn-primary me-2" onClick={handlePrevPage} disabled={currentPage === 0}>
-          Previous
-        </button>
-        <span>{`Page ${currentPage + 1} of ${Math.ceil(data.ctRoot.length / recordsPerPage)}`}</span>
-        <button
-          className="btn btn-primary ms-2"
-          onClick={handleNextPage}
-          disabled={currentPage >= Math.ceil(data.ctRoot.length / recordsPerPage) - 1}
-        >
-          Next
-        </button>
-      </div>
+
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+
       {showModal && selectedPerson && (
         <PersonDetailsModal person={selectedPerson} onClose={() => setShowModal(false)} />
       )}
