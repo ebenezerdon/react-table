@@ -1,24 +1,7 @@
 import React, { useState } from 'react'
 import './DataTable.scss'
-
-type Person = {
-  _id: string
-  name: string
-  dob: string
-  address: {
-    street: string
-    town: string
-    postcode: string
-  }
-  telephone: string
-  pets: string[]
-  score: number
-  email: string
-  url: string
-  description: string
-  verified: boolean
-  salary: number
-}
+import PersonDetailsModal from './PersonDetailsModal'
+import { Person } from '../data/types'
 
 type DataTableProps = {
   data: {
@@ -28,6 +11,8 @@ type DataTableProps = {
 
 const DataTable: React.FC<DataTableProps> = ({ data }) => {
   const [currentPage, setCurrentPage] = useState(0)
+  const [showModal, setShowModal] = useState(false)
+  const [selectedPerson, setSelectedPerson] = useState<Person | null>(null)
   const recordsPerPage = 10
 
   const handlePrevPage = () => {
@@ -39,13 +24,41 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
     setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : prev))
   }
 
+  const handleRowClick = (person: Person) => {
+    setSelectedPerson(person)
+    setShowModal(true)
+  }
+
   const startIndex = currentPage * recordsPerPage
   const endIndex = startIndex + recordsPerPage
   const currentRecords = data.ctRoot.slice(startIndex, endIndex)
 
   return (
     <div className="custom-style table-responsive">
-      <div className="d-flex align-items-center my-3">
+      <table className="table table-striped table-bordered">
+        <thead>
+          <tr className="table-primary">
+            <th>Name</th>
+            <th>DOB</th>
+            <th>Email</th>
+            <th>Verified</th>
+            <th>Salary</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentRecords.map((person) => (
+            <tr key={person._id} onClick={() => handleRowClick(person)} style={{ cursor: 'pointer' }}>
+              <td>{person.name}</td>
+              <td>{person.dob}</td>
+              <td>{person.email}</td>
+              <td>{person.verified ? 'Yes' : 'No'}</td>
+              <td>{person.salary.toLocaleString()}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <div className="d-flex align-items-center my-4 justify-content-center">
         <button className="btn btn-primary me-2" onClick={handlePrevPage} disabled={currentPage === 0}>
           Previous
         </button>
@@ -59,42 +72,9 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
         </button>
       </div>
 
-      <table className="table table-striped table-bordered">
-        <thead>
-          <tr className="table-primary">
-            <th>Name</th>
-            <th>DOB</th>
-            <th>Email</th>
-            <th>Verified</th>
-            <th>Salary</th>
-            <th>Address</th>
-            <th>Telephone</th>
-            <th>Pets</th>
-            <th>Score</th>
-            <th>URL</th>
-            <th className="desc">Description</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentRecords.map((person) => (
-            <tr key={person._id}>
-              <td data-label="Name">{person.name}</td>
-              <td data-label="DOB">{person.dob}</td>
-              <td data-label="Email">{person.email}</td>
-              <td data-label="Verified">{person.verified ? 'Yes' : 'No'}</td>
-              <td data-label="Salary">{person.salary.toLocaleString()}</td>
-              <td data-label="Address">{`${person.address.street}, ${person.address.town}, ${person.address.postcode}`}</td>
-              <td data-label="Telephone">{person.telephone}</td>
-              <td data-label="Pets">{person.pets.join(', ')}</td>
-              <td data-label="Score">{person.score}</td>
-              <td data-label="URL">
-                <a href={person.url}>{person.url}</a>
-              </td>
-              <td data-label="Description">{person.description}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {showModal && selectedPerson && (
+        <PersonDetailsModal person={selectedPerson} onClose={() => setShowModal(false)} />
+      )}
     </div>
   )
 }
