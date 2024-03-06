@@ -28,19 +28,19 @@ type DataTableProps = {
 
 const DataTable: React.FC<DataTableProps> = ({ data }) => {
   return (
-    <div className="table-responsive">
-      <table className="table table-striped table-bordered table-hover">
+    <div className="custom-style table-responsive">
+      <table className="table table-striped table-bordered">
         <thead>
           <tr className="table-primary">
             <th>Name</th>
-            <th>Date of Birth</th>
+            <th>DOB</th>
             <th>Address</th>
             <th>Telephone</th>
             <th>Pets</th>
             <th>Score</th>
             <th>Email</th>
             <th>URL</th>
-            <th>Description</th>
+            <th className="desc">Description</th>
             <th>Verified</th>
             <th>Salary</th>
           </tr>
@@ -48,19 +48,19 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
         <tbody>
           {data.ctRoot.map((person) => (
             <tr key={person._id}>
-              <td>{person.name}</td>
-              <td>{person.dob}</td>
-              <td>{`${person.address.street}, ${person.address.town}, ${person.address.postode}`}</td>
-              <td>{person.telephone}</td>
-              <td>{person.pets.join(', ')}</td>
-              <td>{person.score}</td>
-              <td>{person.email}</td>
-              <td>
+              <td data-label="Name">{person.name}</td>
+              <td data-label="DOB">{person.dob}</td>
+              <td data-label="Address">{`${person.address.street}, ${person.address.town}, ${person.address.postode}`}</td>
+              <td data-label="Telephone">{person.telephone}</td>
+              <td data-label="Pets">{person.pets.join(', ')}</td>
+              <td data-label="Score">{person.score}</td>
+              <td data-label="Email">{person.email}</td>
+              <td data-label="URL">
                 <a href={person.url}>{person.url}</a>
               </td>
-              <td>{person.description}</td>
-              <td>{person.verified ? 'Yes' : 'No'}</td>
-              <td>{person.salary}</td>
+              <td data-label="Description">{person.description}</td>
+              <td data-label="Verified">{person.verified ? 'Yes' : 'No'}</td>
+              <td data-label="Salary">{person.salary.toLocaleString()}</td>
             </tr>
           ))}
         </tbody>
