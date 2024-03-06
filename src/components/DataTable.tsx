@@ -36,9 +36,9 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
             <th>DOB</th>
             <th>Address</th>
             <th>Telephone</th>
+            <th>Email</th>
             <th>Pets</th>
             <th>Score</th>
-            <th>Email</th>
             <th>URL</th>
             <th className="desc">Description</th>
             <th>Verified</th>
@@ -52,9 +52,9 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
               <td data-label="DOB">{person.dob}</td>
               <td data-label="Address">{`${person.address.street}, ${person.address.town}, ${person.address.postode}`}</td>
               <td data-label="Telephone">{person.telephone}</td>
+              <td data-label="Email">{person.email}</td>
               <td data-label="Pets">{person.pets.join(', ')}</td>
               <td data-label="Score">{person.score}</td>
-              <td data-label="Email">{person.email}</td>
               <td data-label="URL">
                 <a href={person.url}>{person.url}</a>
               </td>
