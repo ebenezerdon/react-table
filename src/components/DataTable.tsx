@@ -33,6 +33,8 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
   const handleRowClick = (person: Person) => {
     setSelectedPerson(person)
     setShowModal(true)
+    setHighlightedRow(person._id)
+    setJumpToRow('')
   }
 
   const clearJumpToRow = () => {
