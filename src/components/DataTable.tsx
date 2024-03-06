@@ -35,7 +35,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
 
   return (
     <div className="custom-style table-responsive">
-      <table className="table table-striped table-bordered">
+      <table className="table table-striped table-bordered table-hover">
         <thead>
           <tr className="table-primary">
             <th>Name</th>

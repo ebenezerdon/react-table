@@ -3,7 +3,7 @@
     padding: 1em 5em;
   }
 
-  .desc {
-    padding: 0 10em;
+  .table-hover tbody tr:hover td {
+    background: #ebf2ff;
   }
 }
