@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { Person } from '../data/types'
 
 type PersonDetailsModalProps = {
@@ -7,13 +7,36 @@ type PersonDetailsModalProps = {
 }
 
 const PersonDetailsModal: React.FC<PersonDetailsModalProps> = ({ person, onClose }) => {
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  /* Close modal on Esc key press */
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [onClose])
+
+  /* Close modal on backdrop click */
+  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (modalRef.current && modalRef.current === event.target) {
+      onClose()
+    }
+  }
+
   return (
-    <div className="modal" style={{ display: 'block' }}>
-      <div className="modal-dialog">
+    <div className="modal" style={{ display: 'block' }} onClick={handleBackdropClick} ref={modalRef}>
+      <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">Person Details</h5>
-            <button type="button" className="btn-close" onClick={onClose}></button>
           </div>
           <div className="modal-body">
             <p>
