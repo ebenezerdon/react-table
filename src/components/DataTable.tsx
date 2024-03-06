@@ -34,29 +34,31 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
   const currentRecords = data.ctRoot.slice(startIndex, endIndex)
 
   return (
-    <div className="custom-style table-responsive">
-      <table className="table table-striped table-bordered table-hover">
-        <thead>
-          <tr className="table-primary">
-            <th>Name</th>
-            <th>DOB</th>
-            <th>Email</th>
-            <th>Verified</th>
-            <th>Salary</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentRecords.map((person) => (
-            <tr key={person._id} onClick={() => handleRowClick(person)} style={{ cursor: 'pointer' }}>
-              <td>{person.name}</td>
-              <td>{person.dob}</td>
-              <td>{person.email}</td>
-              <td>{person.verified ? 'Yes' : 'No'}</td>
-              <td>{person.salary.toLocaleString()}</td>
+    <main>
+      <div className="custom-style table-responsive">
+        <table className="table table-striped table-bordered table-hover">
+          <thead>
+            <tr className="table-primary">
+              <th>Name</th>
+              <th>DOB</th>
+              <th>Email</th>
+              <th>Verified</th>
+              <th>Salary</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {currentRecords.map((person) => (
+              <tr key={person._id} onClick={() => handleRowClick(person)} style={{ cursor: 'pointer' }}>
+                <td>{person.name}</td>
+                <td>{person.dob}</td>
+                <td>{person.email}</td>
+                <td>{person.verified ? 'Yes' : 'No'}</td>
+                <td>{person.salary.toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <div className="d-flex align-items-center my-4 justify-content-center">
         <button className="btn btn-primary me-2" onClick={handlePrevPage} disabled={currentPage === 0}>
@@ -75,7 +77,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
       {showModal && selectedPerson && (
         <PersonDetailsModal person={selectedPerson} onClose={() => setShowModal(false)} />
       )}
-    </div>
+    </main>
   )
 }
 
