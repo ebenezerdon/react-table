@@ -14,9 +14,10 @@ const DataTable = ({ data }: DataTableProps) => {
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null)
   const [targetRow, setTargetRow] = useState('')
   const [highlightedRow, setHighlightedRow] = useState<string | null>(null)
+  const [sortField, setSortField] = useState<string | null>(null)
+  const [sortOrder, setSortOrder] = useState('asc') // 'asc' or 'desc'
   const recordsPerPage = 10
 
-  /* Jump to row page and highlight the row */
   useEffect(() => {
     if (targetRow) {
       const rowNumber = parseInt(targetRow, 10)
@@ -40,10 +41,28 @@ const DataTable = ({ data }: DataTableProps) => {
     setHighlightedRow(null)
   }
 
+  const handleSort = (field: string) => {
+    const order = field === sortField && sortOrder === 'asc' ? 'desc' : 'asc'
+    setSortField(field)
+    setSortOrder(order)
+  }
+
+  const sortedData = [...data].sort((a, b) => {
+    if (!sortField) return 0
+
+    if (a[sortField as keyof Person] < b[sortField as keyof Person]) {
+      return sortOrder === 'asc' ? -1 : 1
+    }
+    if (a[sortField as keyof Person] > b[sortField as keyof Person]) {
+      return sortOrder === 'asc' ? 1 : -1
+    }
+    return 0
+  })
+
   const startIndex = currentPage * recordsPerPage
   const endIndex = startIndex + recordsPerPage
-  const currentRecords = data.slice(startIndex, endIndex)
-  const totalPages = Math.ceil(data.length / recordsPerPage)
+  const currentRecords = sortedData.slice(startIndex, endIndex)
+  const totalPages = Math.ceil(sortedData.length / recordsPerPage)
 
   return (
     <main>
@@ -52,7 +71,7 @@ const DataTable = ({ data }: DataTableProps) => {
           <input
             type="number"
             className="form-control"
-            placeholder={`Enter row number (1-${data.length})`}
+            placeholder={`Enter row number (1-${sortedData.length})`}
             value={targetRow}
             onChange={(e) => setTargetRow(e.target.value)}
           />
@@ -66,11 +85,11 @@ const DataTable = ({ data }: DataTableProps) => {
           <thead>
             <tr className="table-primary">
               <th className="index-col">#</th>
-              <th>Name</th>
-              <th>DOB</th>
-              <th>Email</th>
-              <th>Verified</th>
-              <th>Salary</th>
+              <th onClick={() => handleSort('name')}>Name</th>
+              <th onClick={() => handleSort('dob')}>DOB</th>
+              <th onClick={() => handleSort('email')}>Email</th>
+              <th onClick={() => handleSort('verified')}>Verified</th>
+              <th onClick={() => handleSort('salary')}>Salary</th>
             </tr>
           </thead>
           <tbody>
@@ -94,9 +113,7 @@ const DataTable = ({ data }: DataTableProps) => {
           </tbody>
         </table>
       </div>
-
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
-
       {showModal && selectedPerson && (
         <PersonDetailsModal person={selectedPerson} onClose={() => setShowModal(false)} />
       )}
