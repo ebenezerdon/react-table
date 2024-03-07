@@ -7,7 +7,7 @@ function App() {
 
   return (
     <>
-      <DataTable data={data} />
+      <DataTable data={data.ctRoot} />
     </>
   )
 }
