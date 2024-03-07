@@ -4,7 +4,7 @@ type PaginationProps = {
   onPageChange: (page: number) => void
 }
 
-const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
+const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
   return (
     <div className="d-flex align-items-center my-4 justify-content-center">
       <button

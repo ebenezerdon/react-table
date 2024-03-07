@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Pagination from './Pagination'
 import PersonDetailsModal from './PersonDetailsModal'
 import './DataTable.scss'
@@ -8,7 +8,7 @@ type DataTableProps = {
   data: Person[]
 }
 
-const DataTable: React.FC<DataTableProps> = ({ data }) => {
+const DataTable = ({ data }: DataTableProps) => {
   const [currentPage, setCurrentPage] = useState(0)
   const [showModal, setShowModal] = useState(false)
   const [selectedPerson, setSelectedPerson] = useState<Person | null>(null)
