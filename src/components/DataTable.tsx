@@ -5,9 +5,7 @@ import './DataTable.scss'
 import { Person } from '../data/types'
 
 type DataTableProps = {
-  data: {
-    ctRoot: Person[]
-  }
+  data: Person[]
 }
 
 const DataTable: React.FC<DataTableProps> = ({ data }) => {
@@ -22,13 +20,13 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
   useEffect(() => {
     if (targetRow) {
       const rowNumber = parseInt(targetRow, 10)
-      if (!isNaN(rowNumber) && rowNumber >= 1 && rowNumber <= data.ctRoot.length) {
+      if (!isNaN(rowNumber) && rowNumber >= 1 && rowNumber <= data.length) {
         const pageNumber = Math.ceil(rowNumber / recordsPerPage) - 1
         setCurrentPage(pageNumber)
-        setHighlightedRow(data.ctRoot[rowNumber - 1]._id)
+        setHighlightedRow(data[rowNumber - 1]._id)
       }
     }
-  }, [targetRow, data.ctRoot])
+  }, [targetRow, data])
 
   const handleRowClick = (person: Person) => {
     setSelectedPerson(person)
@@ -44,8 +42,8 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
 
   const startIndex = currentPage * recordsPerPage
   const endIndex = startIndex + recordsPerPage
-  const currentRecords = data.ctRoot.slice(startIndex, endIndex)
-  const totalPages = Math.ceil(data.ctRoot.length / recordsPerPage)
+  const currentRecords = data.slice(startIndex, endIndex)
+  const totalPages = Math.ceil(data.length / recordsPerPage)
 
   return (
     <main>
@@ -54,7 +52,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
           <input
             type="number"
             className="form-control"
-            placeholder={`Enter row number (1-${data.ctRoot.length})`}
+            placeholder={`Enter row number (1-${data.length})`}
             value={targetRow}
             onChange={(e) => setTargetRow(e.target.value)}
           />
