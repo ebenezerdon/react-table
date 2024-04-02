@@ -16,6 +16,7 @@ const DataTable = ({ data }: DataTableProps) => {
   const [highlightedRow, setHighlightedRow] = useState<string | null>(null)
   const [sortField, setSortField] = useState<string | null>(null)
   const [sortOrder, setSortOrder] = useState('asc') // 'asc' or 'desc'
+  const [filterText, setFilterText] = useState('')
   const recordsPerPage = 10
 
   useEffect(() => {
@@ -47,7 +48,13 @@ const DataTable = ({ data }: DataTableProps) => {
     setSortOrder(order)
   }
 
-  const sortedData = [...data].sort((a, b) => {
+  const filteredData = data.filter((person) => {
+    if (filterText) {
+      return person.name.toLowerCase().includes(filterText?.toLowerCase())
+    } else return true
+  })
+
+  const sortedData = filteredData.sort((a, b) => {
     if (!sortField) return 0
 
     if (a[sortField as keyof Person] < b[sortField as keyof Person]) {
@@ -68,6 +75,13 @@ const DataTable = ({ data }: DataTableProps) => {
     <main>
       <div className="jump-to-row my-3">
         <div className="input-group">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Filter by name"
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
+          />
           <input
             type="number"
             className="form-control"
